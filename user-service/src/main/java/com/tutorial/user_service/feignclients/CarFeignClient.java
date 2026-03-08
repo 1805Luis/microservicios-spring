@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import com.tutorial.user_service.model.Car;
 
-@FeignClient(name = "car-service")
+@FeignClient(name = "car-service",path = "/car")
 public interface CarFeignClient {
 
     @PostMapping("")
