@@ -1,6 +1,7 @@
 package com.tutorial.user_service.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+
 
 
 
@@ -72,6 +74,31 @@ public class UserController {
 
         return ResponseEntity.ok(bikes);
     }
+
+    @PostMapping("/savecar/{userId}")
+    public ResponseEntity<Car> saveCar(@PathVariable("userId") int userId,@RequestBody Car car) {
+        if(userService.getUserById(userId) == null){
+            return ResponseEntity.notFound().build();
+        }
+        Car carNew = userService.saveCar(userId, car);
+        return ResponseEntity.ok(carNew);
+    }
+
+    @PostMapping("/savebike/{userId}")
+    public ResponseEntity<Bike> saveBike(@PathVariable("userId") int userId,@RequestBody Bike bike) {
+        if(userService.getUserById(userId) == null){
+            return ResponseEntity.notFound().build();
+        }
+        Bike bikeNew = userService.saveBike(userId, bike);
+        return ResponseEntity.ok(bikeNew);
+    }
+
+    @GetMapping("/getAll/{userId}")
+    public ResponseEntity<Map<String,Object>> getAllVehicles(@PathVariable("userId") int userId) {
+        return ResponseEntity.ok(userService.getUserAndVehicles(userId));
+    }
+    
+    
 
 }
 
