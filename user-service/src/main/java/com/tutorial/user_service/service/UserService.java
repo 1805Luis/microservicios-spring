@@ -91,13 +91,14 @@ public class UserService {
             result.put("Cars", cars);
         }
 
+        /* 
         List<Bike> bikes = bikeFeignClient.getBikes(userId);
 
         if(bikes == null|| bikes.isEmpty()){
             result.put("Bikes", "El usuario no tiene motos");
         }else{
             result.put("Bikes", bikes);
-        }
+        } */
 
         return result;
 
