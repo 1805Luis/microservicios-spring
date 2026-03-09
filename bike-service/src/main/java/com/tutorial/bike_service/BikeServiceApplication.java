@@ -3,7 +3,7 @@ package com.tutorial.bike_service;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication(scanBasePackages = "com.tutorial")
+@SpringBootApplication()
 public class BikeServiceApplication {
 
 	public static void main(String[] args) {
