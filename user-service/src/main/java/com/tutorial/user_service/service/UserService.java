@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -73,34 +74,40 @@ public class UserService {
         return bikeNew;
     }
 
-    public Map<String,Object> getUserAndVehicles(int userId){
-        Map<String,Object> result = new HashMap<>();
+    public Map<String, Object> getUserAndVehicles(int userId) {
+
+        Map<String, Object> result = new HashMap<>();
         User user = userRepository.findById(userId).orElse(null);
 
-        if(user == null){
+        if (user == null) {
             result.put("Mensaje", "no existe el usuario");
             return result;
         }
 
         result.put("Usuario", user);
-        List<Car> cars = carFeignClient.getCars(userId);
 
-        if(cars == null || cars.isEmpty()){
+        CompletableFuture<List<Car>> carsFuture =
+                CompletableFuture.supplyAsync(() -> carFeignClient.getCars(userId));
+
+        CompletableFuture<List<Bike>> bikesFuture =
+                CompletableFuture.supplyAsync(() -> bikeFeignClient.getBikes(userId));
+
+        List<Car> cars = carsFuture.join();
+        List<Bike> bikes = bikesFuture.join();
+
+        if (cars == null || cars.isEmpty()) {
             result.put("Cars", "El usuario no tiene coches");
-        }else{
+        } else {
             result.put("Cars", cars);
         }
 
-        List<Bike> bikes = bikeFeignClient.getBikes(userId);
-
-        if(bikes == null|| bikes.isEmpty()){
+        if (bikes == null || bikes.isEmpty()) {
             result.put("Bikes", "El usuario no tiene motos");
-        }else{
+        } else {
             result.put("Bikes", bikes);
-        } 
+        }
 
         return result;
-
     }
 
 }
